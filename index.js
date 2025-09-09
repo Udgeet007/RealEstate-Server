@@ -12,6 +12,15 @@ app.get('/', (req,res) =>{
 app.use(express.json()); // this will allow json to the server 
 
 app.use('/api/users',authRoute);
+app.use((err,req,res,next) =>{
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
 
 app.listen(port,()=>{
   connectToDB()
